@@ -146,24 +146,28 @@ public class Player : MonoBehaviour
                 }
             }
 
-            Vector2 trObstOrigin = new Vector2(pos.x + 0.7f, pos.y);
-            RaycastHit2D obstHitTrY = Physics2D.Raycast(trObstOrigin, Vector2.down, velocity.y * Time.fixedDeltaTime, transfromatorLayerMask);
-            if (obstHitTrY.collider != null)
+            if(velocity.y < 0)
             {
-                TrObst trans = obstHitTrY.collider.GetComponent<TrObst>();
-                if (trans != null)
+                Vector2 trObstOrigin = new Vector2(pos.x, pos.y);
+                RaycastHit2D obstHitTrY = Physics2D.Raycast(trObstOrigin, Vector2.down, velocity.y * Time.fixedDeltaTime, transfromatorLayerMask);
+                if (obstHitTrY.collider != null)
                 {
-                    if (pos.y <= trans.groundHeight)
+                    TrObst trans = obstHitTrY.collider.GetComponent<TrObst>();
+                    if (trans != null)
                     {
-                        groundHeight = trans.groundHeight;
-                       
-                        pos.y = groundHeight;
-                        velocity.y = 0;
-                        isGrounded = true;
+                        if (pos.y <= trans.groundHeight)
+                        {
+                            groundHeight = trans.groundHeight;
+
+                            pos.y = groundHeight;
+                            velocity.y = 0;
+                            isGrounded = true;
+                        }
                     }
                 }
+                Debug.DrawRay(rayOrigin, Vector2.up * (velocity.y * Time.fixedDeltaTime), Color.blue);
             }
-            Debug.DrawRay(rayOrigin, Vector2.up * (velocity.y * Time.fixedDeltaTime), Color.blue);
+            
 
         }
 
@@ -220,7 +224,26 @@ public class Player : MonoBehaviour
         }
 
 
-        
+        Vector2 glassOrigin = new Vector2(pos.x, pos.y);
+        RaycastHit2D glassHitX = Physics2D.Raycast(glassOrigin, Vector2.right, velocity.x * Time.fixedDeltaTime, obstacleLayerMask);
+        if (glassHitX.collider != null)
+        {
+            GlassBox glassBox = glassHitX.collider.GetComponent<GlassBox>();
+            if (glassBox != null)
+            {
+                hitBox(glassBox);
+            }
+        }
+
+        RaycastHit2D glassHitY = Physics2D.Raycast(glassOrigin, Vector2.up, velocity.y * Time.fixedDeltaTime, obstacleLayerMask);
+        if (glassHitY.collider != null)
+        {
+            GlassBox glassBox = glassHitY.collider.GetComponent<GlassBox>();
+            if (glassBox != null)
+            {
+                hitBox(glassBox);
+            }
+        }
 
 
         transform.position = pos;
@@ -233,8 +256,16 @@ public class Player : MonoBehaviour
         velocity.x *= 0.7f;
     }
 
-    void hitTrObstacle(Obstacle obstacle)
+    void hitBox(GlassBox box)
     {
-        isGrounded = true;
+        velocity.x = 0;
+        isDead = true;
+        Destroy(gameObject);
+        Destroy(box.gameObject);    
     }
+
+    //void hitTrObstacle(Obstacle obstacle)
+    //{
+    //    isGrounded = true;
+    //}
 }

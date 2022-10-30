@@ -11,6 +11,7 @@ public class GroundFall : MonoBehaviour
     public Player player;
     public List<Obstacle> obstacles = new List<Obstacle>();
     public List<TrObst> transformators = new List<TrObst>();
+    public List<GlassBox> glass = new List<GlassBox>();
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +61,17 @@ public class GroundFall : MonoBehaviour
                     t.transform.position = oPos;
                 }
             }
+
+            foreach (GlassBox g in glass)
+            {
+                if (g != null)
+                {
+                    Vector2 oPos = g.transform.position;
+                    oPos.y -= fallAmount;
+                    g.transform.position = oPos;
+                }
+            }
+
             transform.position = pos;
         }
         else
