@@ -26,9 +26,11 @@ public class Player : MonoBehaviour
 
     public LayerMask groundLayerMask;
     public LayerMask obstacleLayerMask;
+    public LayerMask transfromatorLayerMask;
 
     GroundFall fall;
     CameraController cameraController;
+    
 
     void Start()
     {
@@ -143,6 +145,26 @@ public class Player : MonoBehaviour
                     }
                 }
             }
+
+            Vector2 trObstOrigin = new Vector2(pos.x + 0.7f, pos.y);
+            RaycastHit2D obstHitTrY = Physics2D.Raycast(trObstOrigin, Vector2.down, velocity.y * Time.fixedDeltaTime, transfromatorLayerMask);
+            if (obstHitTrY.collider != null)
+            {
+                TrObst trans = obstHitTrY.collider.GetComponent<TrObst>();
+                if (trans != null)
+                {
+                    if (pos.y <= trans.groundHeight)
+                    {
+                        groundHeight = trans.groundHeight;
+                       
+                        pos.y = groundHeight;
+                        velocity.y = 0;
+                        isGrounded = true;
+                    }
+                }
+            }
+            Debug.DrawRay(rayOrigin, Vector2.up * (velocity.y * Time.fixedDeltaTime), Color.blue);
+
         }
 
         distance += velocity.x * Time.fixedDeltaTime;
@@ -198,6 +220,9 @@ public class Player : MonoBehaviour
         }
 
 
+        
+
+
         transform.position = pos;
     }
 
@@ -208,4 +233,8 @@ public class Player : MonoBehaviour
         velocity.x *= 0.7f;
     }
 
+    void hitTrObstacle(Obstacle obstacle)
+    {
+        isGrounded = true;
+    }
 }

@@ -10,6 +10,7 @@ public class GroundFall : MonoBehaviour
 
     public Player player;
     public List<Obstacle> obstacles = new List<Obstacle>();
+    public List<TrObst> transformators = new List<TrObst>();
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +48,16 @@ public class GroundFall : MonoBehaviour
                     Vector2 oPos = o.transform.position;
                     oPos.y -= fallAmount;
                     o.transform.position = oPos;
+                }
+            }
+
+            foreach (TrObst t in transformators)
+            {
+                if (t != null)
+                {
+                    Vector2 oPos = t.transform.position;
+                    oPos.y -= fallAmount;
+                    t.transform.position = oPos;
                 }
             }
             transform.position = pos;

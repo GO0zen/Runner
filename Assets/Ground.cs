@@ -17,8 +17,7 @@ public class Ground : MonoBehaviour
     bool didGenerateGround = false;
 
     public Obstacle boxTemplate;
-    public Obstacle transformTemplate;
-
+    public TrObst tfTemplate;
    
 
     private void Awake()
@@ -70,9 +69,8 @@ public class Ground : MonoBehaviour
     void generateGround()
     {
         GameObject go = Instantiate(gameObject);
-        GameObject transformator = Instantiate(transformTemplate.gameObject);
         BoxCollider2D goCollider = go.GetComponent<BoxCollider2D>();
-        BoxCollider2D trCollider = transformator.GetComponent<BoxCollider2D>();
+        
         Vector2 pos;
 
         float h1 = player.jumpVelocity * player.maxHoldJumpTime;
@@ -152,30 +150,29 @@ public class Ground : MonoBehaviour
 
         int obstacleTransformNum = Random.Range(0, 2);
         Debug.Log(obstacleTransformNum);
-        for(int i = 0; i < obstacleTransformNum; i++)
+        for (int i = 0; i < obstacleTransformNum; i++)
         {
-            //float y = goGround.groundHeight;
-            float halfWidth = goCollider.size.x / 2 - 1;
-            //float transformHalfWidth = trCollider.size.x / 2 - 1;
-            //float trLeft = trCollider.transform.position.x - transformHalfWidth;
-            //float trRight = trCollider.transform.position.x + transformHalfWidth;
+            GameObject tf = Instantiate(tfTemplate.gameObject);
+            float y = goGround.groundHeight + 3;
+            float halfWidth = (goCollider.size.x / 2) - 14.5f;
+
             float left = go.transform.position.x - halfWidth;
             float right = go.transform.position.x + halfWidth;
-            
-            
+
+
             float x = Random.Range(left, right);
-            
-            
-            Vector2 transformPos = new Vector2(x, goGround.groundHeight);
-            transformator.transform.position = transformPos;
+
+
+            Vector2 transformPos = new Vector2(x, y);
+            tf.transform.position = transformPos;
 
             if (fall != null)
             {
-                Obstacle trans = transformator.GetComponent<Obstacle>();
-                fall.obstacles.Add(trans);
+                TrObst trans = tf.GetComponent<TrObst>();
+                fall.transformators.Add(trans);
             }
         }
-        
+
 
     }
 
