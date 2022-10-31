@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     public float jumpGroundThreshold = 1;
 
     public bool isDead = false;
-    bool busted = false;
+    //public bool isCollected = false;
 
     public LayerMask groundLayerMask;
     public LayerMask obstacleLayerMask;
@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
 
     GroundFall fall;
     CameraController cameraController;
+    powerManager powerUp;
 
 
     float timerLength = 10.0f;
@@ -49,17 +50,6 @@ public class Player : MonoBehaviour
         Vector2 pos = transform.position;
         float groundDistance = Mathf.Abs(pos.y - groundHeight);
 
-
-        if (runTimer)
-        {
-            timerTimePassed += Time.deltaTime;
-            if (timerTimePassed >= timerLength)
-            {
-                timerTimePassed = 0f;
-                runTimer = false;
-
-            }
-        }
 
         if (isGrounded || groundDistance <= jumpGroundThreshold)
         {
@@ -191,11 +181,14 @@ public class Player : MonoBehaviour
 
         if (isGrounded)
         {
+            
             float velocityRatio = velocity.x / maxXVelocity;
             acceleration = maxAcceleration * (1 - velocityRatio);
             maxHoldJumpTime = maxMaxHoldJumpTime * velocityRatio;
 
             velocity.x += acceleration * Time.fixedDeltaTime;
+
+            
             if (velocity.x >= maxXVelocity)
             {
                 velocity.x = maxXVelocity;
@@ -265,9 +258,12 @@ public class Player : MonoBehaviour
         if (boostHitX.collider != null)
         {
             Boost boost = boostHitX.collider.GetComponent<Boost>();
+            powerUp = GameObject.Find("powerManager").GetComponent<powerManager>();
             if (boost != null)
             {
-                hitBoost(boost);
+                //hitBoost(powerUp, boost);
+                Destroy(boost.gameObject);
+                powerUp.powerActive = true;
             }
         }
 
@@ -275,9 +271,12 @@ public class Player : MonoBehaviour
         if (boostHitY.collider != null)
         {
             Boost boost = boostHitY.collider.GetComponent<Boost>();
+            powerUp = GameObject.Find("powerManager").GetComponent<powerManager>();
             if (boost != null)
             {
-                hitBoost(boost);
+                //hitBoost(powerUp, boost);
+                Destroy(boost.gameObject);
+                powerUp.powerActive = true;
             }
         }
 
@@ -299,10 +298,10 @@ public class Player : MonoBehaviour
         Destroy(box.gameObject);    
     }
     
-    void hitBoost(Boost b)
-    {
-        Destroy(b.gameObject);
+    //void hitBoost(powerManager p, Boost b)
+    //{
+    //    Destroy(b.gameObject);
+    //    p.powerActive = true;
         
-        
-    }
+    //}
 }

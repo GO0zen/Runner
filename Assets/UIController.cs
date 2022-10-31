@@ -51,6 +51,5 @@ public class UIController : MonoBehaviour
     {
         SceneManager.LoadScene("SampleScene");
     }
-
     
 }

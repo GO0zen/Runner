@@ -15,7 +15,7 @@ public class Boost : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -23,7 +23,6 @@ public class Boost : MonoBehaviour
     {
         
     }
-
 
     private void FixedUpdate()
     {
