@@ -8,24 +8,35 @@ public class UIController : MonoBehaviour
 {
     Player player;
     Text distanceText;
+    
 
     GameObject results;
-    Text finalDistanceText;
+    GameObject records;
 
+    Text finalDistanceText;
+    Text recordText;
+
+
+    bool closed;
+
+    int rec = 0;
     private void Awake()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
         distanceText = GameObject.Find("DistanceText").GetComponent<Text>();
         results = GameObject.Find("Results");
         finalDistanceText = GameObject.Find("FinalDistanceText").GetComponent<Text>();
+        records = GameObject.Find("Records");
+        recordText = GameObject.Find("RecordText").GetComponent<Text>();
 
         results.SetActive(false);
+        records.SetActive(false);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rec = PlayerPrefs.GetInt("Record");
     }
 
     // Update is called once per frame
@@ -38,7 +49,20 @@ public class UIController : MonoBehaviour
         {
             results.SetActive(true);
             finalDistanceText.text = distance + " m";
-        }
+            if(distance < rec)
+            {
+                recordText.text = rec.ToString();
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Record", distance);
+                recordText.text = distance.ToString();
+            }
+            if (closed)
+            {
+                results.SetActive(false);
+            }
+        }   
     }
 
 
@@ -50,6 +74,12 @@ public class UIController : MonoBehaviour
     public void Retry()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void Records()
+    {
+        records.SetActive(true);
+        closed = true;
     }
     
 }

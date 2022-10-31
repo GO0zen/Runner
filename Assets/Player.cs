@@ -255,7 +255,12 @@ public class Player : MonoBehaviour
             if (boost != null)
             {
                 Destroy(boost.gameObject);
-                powerUp.powerActive = true;
+                
+                if (powerUp.powerActive == false)
+                {
+                    powerUp.powerActive = true;
+                }
+                Debug.Log(powerUp.powerActive);
             }
         }
 
@@ -267,7 +272,12 @@ public class Player : MonoBehaviour
             if (boost != null)
             {
                 Destroy(boost.gameObject);
-                powerUp.powerActive = true;
+                
+                if (powerUp.powerActive == false)
+                {
+                    powerUp.powerActive = true;
+                }
+                Debug.Log(powerUp.powerActive);
             }
         }
 

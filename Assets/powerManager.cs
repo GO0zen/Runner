@@ -6,7 +6,7 @@ public class powerManager : MonoBehaviour
 {
     public bool powerActive;
 
-    private float lengthCounter = 7f;
+    public float lengthCounter = 7f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +21,11 @@ public class powerManager : MonoBehaviour
         {
             lengthCounter -= Time.deltaTime;
 
-            if (lengthCounter <= 0)
+            if (lengthCounter <= 0.1)
             {
                 powerActive = false;
+                lengthCounter = 7;
             }
         }
     }
-
-
-    //public void ActivatePower(bool safe, float time)
-    //{
-    //    safeMode = safe;
-    //    lengthCounter = time;
-
-
-    //    powerActive = true;
-    //}
 }
