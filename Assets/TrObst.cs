@@ -8,7 +8,7 @@ public class TrObst : MonoBehaviour
 
     public BoxCollider2D collider;
     public Vector2 pos;
-    public float edgeHeight;
+    public float groundHeight;
 
     private void Awake()
     {
@@ -25,14 +25,11 @@ public class TrObst : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        groundHeight = transform.position.y + (collider.size.y * 87.25f);
     }
 
     private void FixedUpdate()
     {
-
-        edgeHeight = transform.position.y + (collider.size.y * 87.25f);
-        //Debug.Log(edgeHeight);
         Vector2 pos = transform.position;
 
         pos.x -= player.velocity.x * Time.fixedDeltaTime;

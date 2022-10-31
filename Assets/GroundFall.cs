@@ -12,7 +12,6 @@ public class GroundFall : MonoBehaviour
     public List<Obstacle> obstacles = new List<Obstacle>();
     public List<TrObst> transformators = new List<TrObst>();
     public List<GlassBox> glass = new List<GlassBox>();
-    public List<Boost> boost = new List<Boost>();
 
     // Start is called before the first frame update
     void Start()
@@ -70,16 +69,6 @@ public class GroundFall : MonoBehaviour
                     Vector2 oPos = g.transform.position;
                     oPos.y -= fallAmount;
                     g.transform.position = oPos;
-                }
-            }
-
-            foreach (Boost b in boost)
-            {
-                if (b != null)
-                {
-                    Vector2 oPos = b.transform.position;
-                    oPos.y -= fallAmount;
-                    b.transform.position = oPos;
                 }
             }
 
