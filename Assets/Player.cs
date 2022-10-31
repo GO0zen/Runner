@@ -23,14 +23,21 @@ public class Player : MonoBehaviour
     public float jumpGroundThreshold = 1;
 
     public bool isDead = false;
+    bool busted = false;
 
     public LayerMask groundLayerMask;
     public LayerMask obstacleLayerMask;
     public LayerMask transfromatorLayerMask;
+    public LayerMask boostLayerMask;
 
     GroundFall fall;
     CameraController cameraController;
-    
+
+
+    float timerLength = 10.0f;
+    float timerTimePassed = 0.0f;
+    bool runTimer = false;
+
 
     void Start()
     {
@@ -41,6 +48,18 @@ public class Player : MonoBehaviour
     {
         Vector2 pos = transform.position;
         float groundDistance = Mathf.Abs(pos.y - groundHeight);
+
+
+        if (runTimer)
+        {
+            timerTimePassed += Time.deltaTime;
+            if (timerTimePassed >= timerLength)
+            {
+                timerTimePassed = 0f;
+                runTimer = false;
+
+            }
+        }
 
         if (isGrounded || groundDistance <= jumpGroundThreshold)
         {
@@ -103,7 +122,7 @@ public class Player : MonoBehaviour
                 velocity.y += gravity * Time.fixedDeltaTime;
             }
 
-            Vector2 rayOrigin = new Vector2(pos.x + 0.7f, pos.y);
+            Vector2 rayOrigin = new Vector2(pos.x + 0.5f, pos.y);
             Vector2 rayDirection = Vector2.up;
             float rayDistance = velocity.y * Time.fixedDeltaTime;
             RaycastHit2D hit2D = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, groundLayerMask);
@@ -148,27 +167,24 @@ public class Player : MonoBehaviour
 
             if(velocity.y < 0)
             {
-                Vector2 trObstOrigin = new Vector2(pos.x, pos.y);
-                RaycastHit2D obstHitTrY = Physics2D.Raycast(trObstOrigin, Vector2.down, velocity.y * Time.fixedDeltaTime, transfromatorLayerMask);
+                Vector2 trObstOrigin = new Vector2(pos.x - 0.5f, pos.y);
+                RaycastHit2D obstHitTrY = Physics2D.Raycast(trObstOrigin, Vector2.up, velocity.y * Time.fixedDeltaTime, transfromatorLayerMask);
                 if (obstHitTrY.collider != null)
                 {
                     TrObst trans = obstHitTrY.collider.GetComponent<TrObst>();
                     if (trans != null)
                     {
-                        if (pos.y <= trans.groundHeight)
+                        if (pos.y <= trans.edgeHeight)
                         {
-                            groundHeight = trans.groundHeight;
-
+                            groundHeight = trans.edgeHeight;
+                            //Debug.Log(groundHeight);
                             pos.y = groundHeight;
                             velocity.y = 0;
                             isGrounded = true;
                         }
                     }
                 }
-                Debug.DrawRay(rayOrigin, Vector2.up * (velocity.y * Time.fixedDeltaTime), Color.blue);
             }
-            
-
         }
 
         distance += velocity.x * Time.fixedDeltaTime;
@@ -186,7 +202,7 @@ public class Player : MonoBehaviour
             }
 
 
-            Vector2 rayOrigin = new Vector2(pos.x - 0.7f, pos.y);
+            Vector2 rayOrigin = new Vector2(pos.x - 0.6f, pos.y);
             Vector2 rayDirection = Vector2.up;
             float rayDistance = velocity.y * Time.fixedDeltaTime;
             if (fall != null)
@@ -198,7 +214,6 @@ public class Player : MonoBehaviour
             {
                 isGrounded = false;
             }
-            Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.yellow);
 
         }
 
@@ -245,6 +260,26 @@ public class Player : MonoBehaviour
             }
         }
 
+        Vector2 boostOrigin = new Vector2(pos.x + 0.2f, pos.y);
+        RaycastHit2D boostHitX = Physics2D.Raycast(boostOrigin, Vector2.right, velocity.x * Time.fixedDeltaTime, boostLayerMask);
+        if (boostHitX.collider != null)
+        {
+            Boost boost = boostHitX.collider.GetComponent<Boost>();
+            if (boost != null)
+            {
+                hitBoost(boost);
+            }
+        }
+
+        RaycastHit2D boostHitY = Physics2D.Raycast(boostOrigin, Vector2.up, velocity.y * Time.fixedDeltaTime, boostLayerMask);
+        if (boostHitY.collider != null)
+        {
+            Boost boost = boostHitY.collider.GetComponent<Boost>();
+            if (boost != null)
+            {
+                hitBoost(boost);
+            }
+        }
 
         transform.position = pos;
     }
@@ -263,9 +298,11 @@ public class Player : MonoBehaviour
         Destroy(gameObject);
         Destroy(box.gameObject);    
     }
-
-    //void hitTrObstacle(Obstacle obstacle)
-    //{
-    //    isGrounded = true;
-    //}
+    
+    void hitBoost(Boost b)
+    {
+        Destroy(b.gameObject);
+        
+        
+    }
 }

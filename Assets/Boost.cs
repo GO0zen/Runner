@@ -2,19 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrObst : MonoBehaviour
+public class Boost : MonoBehaviour
 {
+
     Player player;
 
-    public BoxCollider2D collider;
-    public Vector2 pos;
-    public float edgeHeight;
 
     private void Awake()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
-        collider = GetComponent<BoxCollider2D>();
-        
     }
     // Start is called before the first frame update
     void Start()
@@ -28,11 +24,9 @@ public class TrObst : MonoBehaviour
         
     }
 
+
     private void FixedUpdate()
     {
-
-        edgeHeight = transform.position.y + (collider.size.y * 87.25f);
-        //Debug.Log(edgeHeight);
         Vector2 pos = transform.position;
 
         pos.x -= player.velocity.x * Time.fixedDeltaTime;
@@ -44,4 +38,3 @@ public class TrObst : MonoBehaviour
         transform.position = pos;
     }
 }
-
