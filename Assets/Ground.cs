@@ -73,6 +73,10 @@ public class Ground : MonoBehaviour
         BoxCollider2D goCollider = go.GetComponent<BoxCollider2D>();
         powerManager power = GameObject.Find("powerManager").GetComponent<powerManager>();
 
+        bool status = power.powerActive;
+        Debug.Log(status);
+        
+
         Vector2 pos;
 
         float h1 = player.jumpVelocity * player.maxHoldJumpTime;
@@ -165,10 +169,76 @@ public class Ground : MonoBehaviour
                     Obstacle o = box.GetComponent<Obstacle>();
                     fall.obstacles.Add(o);
                 }
+
             }
 
             int obstacleTransformNum = Random.Range(0, 2);
             int obstacleGlassBoxNum = Random.Range(0, 2);
+
+            for (int i = 0; i < obstacleTransformNum; i++)
+            {
+
+                GameObject tf = Instantiate(tfTemplate.gameObject);
+
+
+                TrObst trans = tf.GetComponent<TrObst>();
+                BoxCollider2D trCollider = trans.GetComponent<BoxCollider2D>();
+
+
+
+
+                float y = goGround.groundHeight + 3;
+                float halfWidth = (goCollider.size.x / 2) - 14.5f;
+
+                float left = go.transform.position.x - halfWidth;
+                float right = go.transform.position.x + halfWidth;
+
+
+                float x = Random.Range(left, right);
+                Vector2 transformPos = new Vector2(x, y);
+                tf.transform.position = transformPos;
+
+
+
+                GameObject Boost = Instantiate(boost.gameObject);
+                Boost b = Boost.GetComponent<Boost>();
+
+                float edge = tf.transform.position.y + (trCollider.size.y * 87.25f);
+                float boostY = edge;
+                float hw = (trCollider.size.x / 2) - 1;
+                float l = tf.transform.position.x - hw;
+                float r = tf.transform.position.x + hw;
+
+                float boostX = Random.Range(l, r);
+                Vector2 boostPos = new Vector2(boostX, boostY);
+                Boost.transform.position = boostPos;
+
+                if (fall != null)
+                {
+                    fall.transformators.Add(trans);
+                    fall.boost.Add(b);
+                }
+            }
+
+            for (int j = 0; j < obstacleGlassBoxNum; j++)
+            {
+                GameObject glass = Instantiate(glassTemplate.gameObject);
+
+
+                float y = goGround.groundHeight;
+                float halfWidth = goCollider.size.x / 2 - 1;
+                float left = go.transform.position.x - halfWidth;
+                float right = go.transform.position.x + halfWidth;
+                float x = Random.Range(left, right);
+                Vector2 glassBoxPos = new Vector2(x, y);
+                glass.transform.position = glassBoxPos;
+
+                if (fall != null)
+                {
+                    GlassBox g = glass.GetComponent<GlassBox>();
+                    fall.glass.Add(g);
+                }
+            }
 
             for (int i = 0; i < obstacleTransformNum; i++)
             {
